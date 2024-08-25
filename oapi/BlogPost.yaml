@@ -1,0 +1,302 @@
+openapi: 3.0.0
+info:
+  version: '1.0'
+  title: BlogPost
+  description: REST API implementation for a simple blog post system
+  contact:
+    name: John Antony
+    email: john.k.antony@gmail.com
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  '/posts/{id}':
+    get:
+      tags:
+        - BlogPost
+      summary: Get blog post by id
+      description: Retrieve the information of the blog post with the matching id.
+      operationId: getBlogpostById
+      parameters:
+        - name: id
+          in: path
+          description: Id of an existing blog post.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Blog post found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blogpost'
+        '401':
+          description: Unauthenticated Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        '404':
+          description: Blog post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+      security:
+        - APIKey: []
+      servers:
+        - url: 'http://localhost:3000'
+      x-eov-operation-handler: handlers/blogpostsController
+    put:
+      tags:
+        - BlogPost
+      summary: Update blog post information
+      description: Update the information of an existing blog post with the matching id.
+      operationId: updateBlogpostById
+      parameters:
+        - name: id
+          in: path
+          description: Id of an existing blog post.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Put blog post properties to update.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  nullable: true
+                contents:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Blog post updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blogpost'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        '401':
+          description: Unauthenticated Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        '404':
+          description: Blog post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        '422':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+      security:
+        - APIKey: []
+      servers:
+        - url: 'http://localhost:3000'
+      x-eov-operation-handler: handlers/blogpostsController
+    delete:
+      tags:
+        - BlogPost
+      summary: Delete blog post information
+      description: Delete an existing blog post with the matching id.
+      operationId: deleteBlogpostById
+      parameters:
+        - name: id
+          in: path
+          description: Id of an existing blog post.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Blog post deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blogpost'
+        '401':
+          description: Unauthenticated Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        '404':
+          description: Blog post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+      security:
+        - APIKey: []
+      servers:
+        - url: 'http://localhost:3000'
+      x-eov-operation-handler: handlers/blogpostsController
+  /posts:
+    get:
+      tags:
+        - BlogPost
+      summary: 'List blog posts, with pagination'
+      description: Retrieve the information of the blog posts.
+      operationId: listBlogposts
+      parameters:
+        - name: offset
+          in: query
+          description: The number of items to skip before starting to collect the result set
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: The numbers of items to return
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Blog posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Blogpost'
+          headers:
+            Pagination-Count:
+              schema:
+                type: integer
+              description: Total number of items
+            Pagination-Page:
+              schema:
+                type: integer
+              description: Current page number
+            Pagination-Limit:
+              schema:
+                type: integer
+              description: Number of returned items
+        '401':
+          description: Unauthenticated Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+      security:
+        - APIKey: []
+      servers:
+        - url: 'http://localhost:3000'
+      x-eov-operation-handler: handlers/blogpostsController
+    post:
+      tags:
+        - BlogPost
+      summary: Create a new blog post
+      description: Create a new blog post.
+      operationId: createBlogpost
+      requestBody:
+        description: Post the necessary fields for the API to create a new blog post.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                contents:
+                  type: string
+                  nullable: true
+              required:
+                - title
+      responses:
+        '201':
+          description: Blog post created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blogpost'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        '401':
+          description: Unauthenticated Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        '422':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+      security:
+        - APIKey: []
+      servers:
+        - url: 'http://localhost:3000'
+      x-eov-operation-handler: handlers/blogpostsController
+tags:
+  - name: BlogPost
+    description: BlogPost API
+components:
+  securitySchemes:
+    APIKey:
+      type: apiKey
+      description: JWT based authorization
+      name: Authorization
+      in: header
+  schemas:
+    Blogpost:
+      type: object
+      title: Blog Post
+      description: Blog post object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the given blog post.
+        title:
+          type: string
+        contents:
+          type: string
+        userId:
+          type: string
+          description: Id of the user that created the blog post
+        createdAt:
+          type: string
+          nullable: true
+          description: The date that blog post was created.
+          format: date-time
+        modifiedAt:
+          type: string
+          nullable: true
+          description: The date that blog post was modified.
+          format: date-time
+      required:
+        - id
+        - title
+        - userId
+    ResponseError:
+      type: object
+      title: Response Error
+      description: Response error object
+      properties:
+        message:
+          type: string
+          nullable: true
+          description: Error message.
+        errors:
+          type: object
+          nullable: true
+          description: Nested errors if any.

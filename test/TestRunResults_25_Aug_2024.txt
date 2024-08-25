@@ -1,0 +1,27 @@
+(base) [26ms][main][~/Work/gitws/richpanel-blogposts/test/autocannon]$ node loadtest.js
++++++++++++++++++++++++++++++
+Load test results for POST /posts:
+Requests/sec: 42812.8
+Latency (ms): 23.11
+-----------------------------
++++++++++++++++++++++++++++++
+Load test results for GET /posts:
+Requests/sec: 11585.6
+Latency (ms): 89.51
+-----------------------------
++++++++++++++++++++++++++++++
+Load test results for GET /posts/2:
+Requests/sec: 44227.2
+Latency (ms): 22.33
+-----------------------------
++++++++++++++++++++++++++++++
+Load test results for PUT /posts/2:
+Requests/sec: 39955.2
+Latency (ms): 24.71
+-----------------------------
++++++++++++++++++++++++++++++
+Load test results for DELETE /posts/1:
+Requests/sec: 538.71
+Latency (ms): 1687.28
+-----------------------------
+(base) [51.288s][main][~/Work/gitws/richpanel-blogposts/test/autocannon]$ 
